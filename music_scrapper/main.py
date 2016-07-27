@@ -1,9 +1,7 @@
 import curses
 import urllib.request
-from curses.textpad import Textbox
 
 from scrapy.crawler import CrawlerProcess
-from scrapy.utils.project import get_project_settings
 
 from music_scrapper.gui import GUI
 from music_scrapper.threads import GuiThread
@@ -22,7 +20,7 @@ def start_gui(process):
 
 
 def main():
-    process = CrawlerProcess(get_project_settings())
+    process = CrawlerProcess({'LOG_ENABLED': False})
     message = ''
     while message == '':
         message = input("Give me something to start with - (Example: senjittale song download ) : ")
