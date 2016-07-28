@@ -1,13 +1,13 @@
 Music-Scrapper
 ==============
 
-.. image:: https://badge.fury.io/py/music_scrapper.svg
-    :target: https://badge.fury.io/py/music_scrapper
-.. image:: https://landscape.io/github/srivatsan-ramesh/Music-Scrapper/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/srivatsan-ramesh/Music-Scrapper/master
+.. image:: https://badge.fury.io/py/music_scraper.svg
+    :target: https://badge.fury.io/py/music_scraper
+.. image:: https://landscape.io/github/srivatsan-ramesh/Music-Scraper/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/srivatsan-ramesh/Music-Scraper/master
    :alt: Code Health\\
    
-Download all your favourite songs from the web at one place. No more searching through the links given by Google Search, Music-Scrapper does it for you.
+Download all your favourite songs from the web at one place. No more searching through the links given by Google Search, Music-Scraper does it for you.
 
 Requirements
 ------------
@@ -18,18 +18,18 @@ Requirements
 Getting Started
 ---------------
 
-Ensure that you have setuptools>=24.0.3 installed for proper installation of music_scrapper.
+Ensure that you have setuptools>=24.0.3 installed for proper installation of music_scraper.
 Installation of setuptools can be done with
 
 .. code-block:: bash
 
     pip install setuptools==24.0.3
 
-Install Music-Scrapper from pip directly
+Install Music-Scraper from pip directly
 
 .. code-block:: bash
 
-    pip install music_scrapper
+    pip install music_scraper
 
 Or
 
@@ -37,8 +37,8 @@ Clone this repository to get started.
 
 .. code-block:: bash
 
-    git clone https://github.com/srivatsan-ramesh/Music-Scrapper.git
-    cd Music-Scrapper/
+    git clone https://github.com/srivatsan-ramesh/Music-Scraper.git
+    cd Music-Scraper/
 
 And install it.
 
@@ -57,4 +57,4 @@ If Scrapy installation creates some problem refer this `link <http://doc.scrapy.
 How to Use
 ----------
 
-Type 'music-scrapper' in the terminal and type in a query which can give audio files in Google Search. For example 'kabali songs download'.
+Type 'music-scraper' in the terminal and type in a query which can give audio files in Google Search. For example 'kabali songs download'.
