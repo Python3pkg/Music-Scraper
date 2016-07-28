@@ -43,7 +43,7 @@ You can also install it for development.
 
     python setup.py develop
 
-If Scrapy installation creates some problem refer this [link](http://doc.scrapy.org/en/latest/intro/install.html).
+If Scrapy installation creates some problem refer this `link <http://doc.scrapy.org/en/latest/intro/install.html>`_.
 
 How to Use
 ----------
