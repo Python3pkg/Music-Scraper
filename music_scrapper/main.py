@@ -1,4 +1,5 @@
 import curses
+
 try:
     from urllib import request
 except ImportError:
@@ -9,6 +10,11 @@ from scrapy.crawler import CrawlerProcess
 from music_scrapper.gui import GUI
 from music_scrapper.threads import GuiThread
 from music_scrapper.spiders.music_spider import MusicSpider
+
+try:
+    input = raw_input
+except NameError:
+    pass
 
 
 def start_gui(process):
@@ -26,7 +32,7 @@ def main():
     process = CrawlerProcess({'LOG_ENABLED': False})
     message = ''
     while message == '':
-        message = raw_input("Give me something to start with - (Example: senjittale song download ) : ")
+        message = input("Give me something to start with - (Example: senjittale song download ) : ")
     s = request.quote(message)
     MusicSpider.start_urls = [
         "http://www.google.com/search?q=" + s,
@@ -42,4 +48,3 @@ def main():
         GUI.box.addstr(curses.LINES - 1, curses.COLS // 2, "ENTR:Download", GUI.high_light_text)
         GUI.screen.refresh()
         GUI.box.refresh()
-
