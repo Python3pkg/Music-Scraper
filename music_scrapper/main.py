@@ -1,5 +1,8 @@
 import curses
-import urllib.request
+try:
+    from urllib import request
+except ImportError:
+    import urllib2 as request
 
 from scrapy.crawler import CrawlerProcess
 
@@ -23,8 +26,8 @@ def main():
     process = CrawlerProcess({'LOG_ENABLED': False})
     message = ''
     while message == '':
-        message = input("Give me something to start with - (Example: senjittale song download ) : ")
-    s = urllib.request.quote(message)
+        message = raw_input("Give me something to start with - (Example: senjittale song download ) : ")
+    s = request.quote(message)
     MusicSpider.start_urls = [
         "http://www.google.com/search?q=" + s,
     ]
@@ -39,3 +42,4 @@ def main():
         GUI.box.addstr(curses.LINES - 1, curses.COLS // 2, "ENTR:Download", GUI.high_light_text)
         GUI.screen.refresh()
         GUI.box.refresh()
+

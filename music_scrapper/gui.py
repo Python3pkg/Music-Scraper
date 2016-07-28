@@ -1,5 +1,8 @@
 import curses
-from urllib import request
+try:
+    from urllib import request
+except ImportError:
+    import urllib2 as request
 
 from math import ceil
 
