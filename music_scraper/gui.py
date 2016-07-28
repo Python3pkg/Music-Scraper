@@ -6,7 +6,7 @@ except ImportError:
 
 from math import ceil
 
-from music_scrapper.threads import DownloadThread
+from music_scraper.threads import DownloadThread
 
 
 class GUI:

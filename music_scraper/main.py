@@ -7,9 +7,9 @@ except ImportError:
 
 from scrapy.crawler import CrawlerProcess
 
-from music_scrapper.gui import GUI
-from music_scrapper.threads import GuiThread
-from music_scrapper.spiders.music_spider import MusicSpider
+from music_scraper.gui import GUI
+from music_scraper.threads import GuiThread
+from music_scraper.spiders.music_spider import MusicSpider
 
 try:
     input = raw_input

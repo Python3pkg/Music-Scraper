@@ -2,7 +2,7 @@ from os import path
 
 import io
 
-import music_scrapper
+import music_scraper
 
 try:
     from setuptools import setup, find_packages
@@ -22,7 +22,7 @@ except ImportError:
 
 
     def find_packages():
-        return list(_find_packages(music_scrapper.__path__, music_scrapper.__name__))
+        return list(_find_packages(music_scraper.__path__, music_scraper.__name__))
 
 here = path.abspath(path.dirname(__file__))
 
@@ -30,7 +30,7 @@ with io.open(path.join(here, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 
-setup(name='music_scrapper',
+setup(name='music_scraper',
       version='1.0.0',
       install_requires=['scrapy >= 1.1.1'],
       description='Gets Songs from the web and allows users to download the same',
@@ -41,6 +41,6 @@ setup(name='music_scrapper',
       license='MIT',
       packages=find_packages(),
       entry_points={
-          'console_scripts': ['music-scrapper=music_scrapper.main:main'],
+          'console_scripts': ['music-scraper=music_scraper.main:main'],
       },
       zip_safe=False)

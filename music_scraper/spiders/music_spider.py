@@ -2,7 +2,7 @@ import cgi
 
 import scrapy
 
-from music_scrapper.gui import GUI
+from music_scraper.gui import GUI
 
 items = []
 
