@@ -23,6 +23,10 @@ def start_gui(process):
         GUI.strings = []
         GUI.init_display()
         GUI.update_on_key()
+        curses.nocbreak()
+        curses.echo()
+        curses.endwin()
+        GUI.gui_stopped = True
 
     curses.wrapper(create_ui)
     process.stop()
@@ -41,7 +45,7 @@ def main():
     thread = GuiThread(process, start_gui)
     thread.start()
     process.start()
-    if len(GUI.strings) == 0:
+    if len(GUI.strings) == 0 and not GUI.gui_stopped:
         GUI.box.erase()
         GUI.box.addstr(0, 0, "No Results Found... Try with Some other keywords.", GUI.high_light_text)
         GUI.box.addstr(curses.LINES - 1, 0, "ESC:Exit", GUI.high_light_text)
