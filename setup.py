@@ -1,3 +1,7 @@
+from os import path
+
+import io
+
 import music_scrapper
 
 try:
@@ -20,11 +24,18 @@ except ImportError:
     def find_packages():
         return list(_find_packages(music_scrapper.__path__, music_scrapper.__name__))
 
+here = path.abspath(path.dirname(__file__))
+
+with io.open(path.join(here, 'README.rst'), encoding='utf-8') as f:
+    long_description = f.read()
+
+
 setup(name='music_scrapper',
       version='1.0.0',
       install_requires=['scrapy >= 1.1.1'],
       description='Gets Songs from the web and allows users to download the same',
-      url='',
+      long_description=long_description,
+      url='https://github.com/srivatsan-ramesh/Music-Scrapper',
       author='srivatsan-ramesh',
       author_email='sriramesh4@gmail.com',
       license='MIT',

@@ -23,6 +23,13 @@ Installation of setuptools can be done with
 
     pip install setuptools==24.0.3
 
+Install Music-Scrapper from pip directly
+
+.. code-block:: bash
+
+    pip install music_scrapper
+
+Or
 
 Clone this repository to get started.
 
