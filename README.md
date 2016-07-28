@@ -1,6 +1,8 @@
 Music-Scrapper
 ==============
 
+[![Code Health](https://landscape.io/github/srivatsan-ramesh/Music-Scrapper/master/landscape.svg?style=flat)](https://landscape.io/github/srivatsan-ramesh/Music-Scrapper/master)
+
 Download all your favourite songs from the web at one place. No more searching through the links given by Google Search, Music-Scrapper does it for you.
 
 Requirements

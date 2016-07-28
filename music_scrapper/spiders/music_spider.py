@@ -38,7 +38,8 @@ class MusicSpider(scrapy.Spider):
                     GUI.size_dict[filename] = int(response.headers['Content-Length'].decode('UTF-8'))
                     break
                 else:
-                    filename += '_'
+                    split_file = filename.split('.')
+                    filename = ''.join(split_file[:-1] + ['_.'] + split_file[-1:])
             GUI.strings += [filename]
             GUI.refresh_values()
             GUI.update_screen()
