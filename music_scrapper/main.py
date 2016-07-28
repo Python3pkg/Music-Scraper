@@ -36,7 +36,7 @@ def main():
     process = CrawlerProcess({'LOG_ENABLED': False})
     message = ''
     while message == '':
-        message = input("Give me something to start with - (Example: senjittale song download ) : ")
+        message = input("Give me something to start with - (Example: kabali song download ) : ")
     s = request.quote(message)
     MusicSpider.start_urls = [
         "http://www.google.com/search?q=" + s,

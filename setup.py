@@ -21,7 +21,7 @@ except ImportError:
         return list(_find_packages(music_scrapper.__path__, music_scrapper.__name__))
 
 setup(name='music_scrapper',
-      version='0.0.1',
+      version='1.0.0',
       install_requires=['scrapy >= 1.1.1'],
       description='Gets Songs from the web and allows users to download the same',
       url='',
@@ -30,6 +30,6 @@ setup(name='music_scrapper',
       license='MIT',
       packages=find_packages(),
       entry_points={
-          'console_scripts': ['music_scrapper=music_scrapper.main:main'],
+          'console_scripts': ['music-scrapper=music_scrapper.main:main'],
       },
       zip_safe=False)
