@@ -1,8 +1,10 @@
 Music-Scrapper
 ==============
 
-[![Code Health](https://landscape.io/github/srivatsan-ramesh/Music-Scrapper/master/landscape.svg?style=flat)](https://landscape.io/github/srivatsan-ramesh/Music-Scrapper/master)
-
+.. image:: https://landscape.io/github/srivatsan-ramesh/Music-Scrapper/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/srivatsan-ramesh/Music-Scrapper/master
+   :alt: Code Health\\
+   
 Download all your favourite songs from the web at one place. No more searching through the links given by Google Search, Music-Scrapper does it for you.
 
 Requirements
@@ -16,28 +18,31 @@ Getting Started
 
 Ensure that you have setuptools>=24.0.3 installed for proper installation of music_scrapper.
 Installation of setuptools can be done with
-``` sourceCode
-pip install setuptools==24.0.3
-```
+
+.. code-block:: bash
+
+    pip install setuptools==24.0.3
+
 
 Clone this repository to get started.
 
-``` sourceCode
-git clone https://github.com/srivatsan-ramesh/Music-Scrapper.git
-cd Music-Scrapper/
-```
+.. code-block:: bash
+
+    git clone https://github.com/srivatsan-ramesh/Music-Scrapper.git
+    cd Music-Scrapper/
 
 And install it.
 
-``` sourceCode
-python setup.py install
-```
+.. code-block:: bash
+
+    python setup.py install
 
 You can also install it for development.
 
-``` sourceCode
-python setup.py develop
-```
+.. code-block:: bash
+
+    python setup.py develop
+
 If Scrapy installation creates some problem refer this [link](http://doc.scrapy.org/en/latest/intro/install.html).
 
 How to Use
