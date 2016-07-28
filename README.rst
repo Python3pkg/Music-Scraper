@@ -1,6 +1,8 @@
 Music-Scrapper
 ==============
 
+.. image:: https://badge.fury.io/py/music_scrapper.svg
+    :target: https://badge.fury.io/py/music_scrapper
 .. image:: https://landscape.io/github/srivatsan-ramesh/Music-Scrapper/master/landscape.svg?style=flat
    :target: https://landscape.io/github/srivatsan-ramesh/Music-Scrapper/master
    :alt: Code Health\\
