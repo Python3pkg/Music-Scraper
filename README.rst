@@ -1,5 +1,5 @@
-Music-Scrapper
-==============
+Music-Scraper
+=============
 
 .. image:: https://badge.fury.io/py/music_scraper.svg
     :target: https://badge.fury.io/py/music_scraper
