@@ -10,8 +10,8 @@ Download all your favourite songs from the web at one place. No more searching t
 Requirements
 ------------
 
--   python&gt;=2.7
--   Scrapy&gt;=1.1.1
+-   python>=2.7
+-   Scrapy>=1.1.1
 
 Getting Started
 ---------------
@@ -48,4 +48,4 @@ If Scrapy installation creates some problem refer this `link <http://doc.scrapy.
 How to Use
 ----------
 
-Type 'music_scrapper' in the terminal and type in a query which can give audio files in Google Search. For example 'kabali songs download'.
+Type 'music-scrapper' in the terminal and type in a query which can give audio files in Google Search. For example 'kabali songs download'.
