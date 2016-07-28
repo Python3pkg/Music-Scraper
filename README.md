@@ -6,11 +6,17 @@ Download all your favourite songs from the web at one place. No more searching t
 Requirements
 ------------
 
--   python&gt;=3.5
+-   python&gt;=2.7
 -   Scrapy&gt;=1.1.1
 
 Getting Started
 ---------------
+
+Ensure that you have setuptools>=24.0.3 installed for proper installation of music_scrapper.
+Installation of setuptools can be done with
+``` sourceCode
+pip install setuptools==24.0.3
+```
 
 Clone this repository to get started.
 
@@ -30,6 +36,7 @@ You can also install it for development.
 ``` sourceCode
 python setup.py develop
 ```
+If Scrapy installation creates some problem refer this [link](http://doc.scrapy.org/en/latest/intro/install.html).
 
 How to Use
 ----------
