@@ -11,11 +11,15 @@ from music_scraper.threads import DownloadThread
 
 class GUI:
 
-    size_dict = {}
-    url_dict = {}
     screen = None
     status = 'Scraping Music ... It might take some time.'
+
+    # Song links' info
     strings = []
+    size_dict = {}
+    url_dict = {}
+
+    # Info used to diaplay list
     pages = 0
     page = 1
     position = 1
@@ -25,12 +29,15 @@ class GUI:
     high_light_text = None
     normal_text = None
     key = None
-    run_download = False
-    gui_stopped = False
-    message = ''
+    run_download = False    # Used to indicate an ongoing download
+    gui_stopped = False     # Used to indicate whether GUI is on or off
+    message = ''            # The message or query passed to scrapy and got as input from user
 
     @staticmethod
     def init_display():
+        """
+        Inits the display GUI
+        """
         if not GUI.gui_stopped:
             curses.noecho()
             curses.cbreak()
@@ -51,6 +58,9 @@ class GUI:
 
     @staticmethod
     def refresh_values():
+        """
+        Refresh the parameters when the size of list changes in display
+        """
         if not GUI.gui_stopped:
             GUI.max_row = curses.LINES - 3
             GUI.row_num = len(GUI.strings)
@@ -58,11 +68,17 @@ class GUI:
 
     @staticmethod
     def add_bottom_menus():
+        """
+        Adds the bottom menu Exit and Download
+        """
         GUI.box.addstr(curses.LINES - 1, 0, "ESC:Exit", GUI.high_light_text)
         GUI.box.addstr(curses.LINES - 1, curses.COLS // 2, "ENTR:Download", GUI.high_light_text)
 
     @staticmethod
     def on_key_down():
+        """
+        Called when down arrow is pressed
+        """
         if GUI.page == 1:
             if GUI.position < min(GUI.max_row, GUI.row_num):
                 GUI.position += 1
@@ -82,6 +98,9 @@ class GUI:
 
     @staticmethod
     def on_key_up():
+        """
+        Called when up arrow key is pressed.
+        """
         if GUI.page == 1:
             if GUI.position > 1:
                 GUI.position -= 1
@@ -94,23 +113,35 @@ class GUI:
 
     @staticmethod
     def on_key_left():
+        """
+        Called when left arrow key is pressed.
+        """
         if GUI.page > 1:
             GUI.page -= 1
             GUI.position = 1 + (GUI.max_row * (GUI.page - 1))
 
     @staticmethod
     def on_key_right():
+        """
+        Called when right arrow key is pressed.
+        """
         if GUI.page < GUI.pages:
             GUI.page += 1
             GUI.position = (1 + (GUI.max_row * (GUI.page - 1)))
 
     @staticmethod
     def on_key_enter():
+        """
+        Called when enter key is pressed. It starts the download process in a new thread
+        """
         thread = DownloadThread(GUI.download_item)
         thread.start()
 
     @staticmethod
     def display_list():
+        """
+        Displays the list of song names scraped from web.
+        """
         for i in range(1 + (GUI.max_row * (GUI.page - 1)), GUI.max_row + 1 + (GUI.max_row * (GUI.page - 1))):
             if GUI.row_num == 0:
                 GUI.box.addstr(1, 1, GUI.status, GUI.high_light_text)
@@ -126,6 +157,9 @@ class GUI:
 
     @staticmethod
     def update_screen():
+        """
+        Updates the screen each time a key is pressed.
+        """
         if not GUI.gui_stopped:
             if GUI.key == curses.KEY_DOWN:
                 GUI.on_key_down()
@@ -146,6 +180,9 @@ class GUI:
 
     @staticmethod
     def update_on_key():
+        """
+        Loops to get a key input and updates the screen accordingly
+        """
         if not GUI.gui_stopped:
             GUI.key = GUI.screen.getch()
             while GUI.key != 27 or GUI.run_download:
@@ -157,11 +194,15 @@ class GUI:
 
     @staticmethod
     def download_item():
+        """
+        It downloads the song from the url and saves it in the file.
+        """
         if GUI.run_download or GUI.gui_stopped:
             return
         GUI.run_download = True
         filename = GUI.strings[GUI.position - 1]
         url = GUI.url_dict[filename]
+        # User agent is specified to prevent some websites from blocking the software
         req = request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
         u = request.urlopen(req)
         f = open(filename, 'wb')
@@ -174,10 +215,12 @@ class GUI:
                 break
             file_size_dl += len(buffer)
             f.write(buffer)
+            # The percentage downloaded
             status = "Downloading " + filename + " [%3.2f%%]" % (file_size_dl * 100. / GUI.size_dict[filename])
             GUI.box.erase()
             GUI.box.addstr(1, 1, status, GUI.high_light_text)
             GUI.box.addstr(2, 1, 'Size: %.2fMB' % (GUI.size_dict[filename]/1024/1024))
+            # Cancel button to cancel the download
             GUI.box.addstr(curses.LINES - 1, 0, "C:Cancel Download", GUI.high_light_text)
             GUI.screen.refresh()
             GUI.box.refresh()
@@ -189,6 +232,13 @@ class GUI:
 
     @staticmethod
     def my_raw_input(r, c, prompt_string):
+        """
+        Gets input on the screen
+        :param r: y coordinate
+        :param c: x coordinate
+        :param prompt_string: The prompt string
+        :return: The input string
+        """
         curses.echo()
         GUI.box.addstr(r, c, prompt_string, GUI.high_light_text)
         GUI.box.refresh()
@@ -197,6 +247,10 @@ class GUI:
 
     @staticmethod
     def get_input():
+        """
+        Loops till user types a non empty query
+        :return: The user inputted query.
+        """
         input_str = ''
         while input_str == '':
             input_str = GUI.my_raw_input(1, 1, 'Give me something to start with - (Example: kabali song download):')

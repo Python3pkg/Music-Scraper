@@ -48,7 +48,7 @@ def start_gui(process):
 def main():
     """
     The entry point for the app. Called when music-scraper is typed in terminal.
-
+    Starts the GUI and starts the scraping process after the input is given
     """
     curses.initscr()
     if curses.COLS < 80 or curses.LINES < 5:
