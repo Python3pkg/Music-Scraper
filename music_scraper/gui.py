@@ -27,6 +27,7 @@ class GUI:
     key = None
     run_download = False
     gui_stopped = False
+    message = ''
 
     @staticmethod
     def init_display():
@@ -115,11 +116,11 @@ class GUI:
                 GUI.box.addstr(1, 1, GUI.status, GUI.high_light_text)
             else:
                 if i + (GUI.max_row * (GUI.page - 1)) == GUI.position + (GUI.max_row * (GUI.page - 1)):
-                    GUI.box.addstr(i - (GUI.max_row * (GUI.page - 1)), 2, str(i) + " - " + GUI.strings[i - 1],
-                                   GUI.high_light_text)
+                    GUI.box.addstr(i - (GUI.max_row * (GUI.page - 1)), 2, (str(i) + " - " + GUI.strings[i - 1] +
+                                   " : %.2fMB") % (GUI.size_dict[GUI.strings[i - 1]]/1024/1024), GUI.high_light_text)
                 else:
-                    GUI.box.addstr(i - (GUI.max_row * (GUI.page - 1)), 2, str(i) + " - " + GUI.strings[i - 1],
-                                   GUI.normal_text)
+                    GUI.box.addstr(i - (GUI.max_row * (GUI.page - 1)), 2, (str(i) + " - " + GUI.strings[i - 1] +
+                                   " : %.2fMB") % (GUI.size_dict[GUI.strings[i - 1]]/1024/1024), GUI.normal_text)
                 if i == GUI.row_num:
                     break
 
@@ -175,7 +176,8 @@ class GUI:
             f.write(buffer)
             status = "Downloading " + filename + " [%3.2f%%]" % (file_size_dl * 100. / GUI.size_dict[filename])
             GUI.box.erase()
-            GUI.box.addstr(0, 0, status, GUI.high_light_text)
+            GUI.box.addstr(1, 1, status, GUI.high_light_text)
+            GUI.box.addstr(2, 1, 'Size: %.2fMB' % (GUI.size_dict[filename]/1024/1024))
             GUI.box.addstr(curses.LINES - 1, 0, "C:Cancel Download", GUI.high_light_text)
             GUI.screen.refresh()
             GUI.box.refresh()
@@ -184,3 +186,18 @@ class GUI:
         GUI.run_download = False
         GUI.key = curses.KEY_DOWN
         GUI.update_screen()
+
+    @staticmethod
+    def my_raw_input(r, c, prompt_string):
+        curses.echo()
+        GUI.box.addstr(r, c, prompt_string, GUI.high_light_text)
+        GUI.box.refresh()
+        input_str = GUI.box.getstr(r + 2, c, curses.COLS)
+        return input_str.decode('UTF-8')
+
+    @staticmethod
+    def get_input():
+        input_str = ''
+        while input_str == '':
+            input_str = GUI.my_raw_input(1, 1, 'Give me something to start with - (Example: kabali song download):')
+        return input_str

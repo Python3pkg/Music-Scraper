@@ -39,7 +39,7 @@ class MusicSpider(scrapy.Spider):
                     break
                 else:
                     split_file = filename.split('.')
-                    filename = ''.join(split_file[:-1] + ['_.'] + split_file[-1:])
+                    filename = '.'.join(split_file[:-1]) + '_.' + split_file[-1]
             GUI.strings += [filename]
             GUI.refresh_values()
             GUI.update_screen()

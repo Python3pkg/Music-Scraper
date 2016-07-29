@@ -8,7 +8,7 @@ except ImportError:
 from scrapy.crawler import CrawlerProcess
 
 from music_scraper.gui import GUI
-from music_scraper.threads import GuiThread
+from music_scraper.threads import GUIThread
 from music_scraper.spiders.music_spider import MusicSpider
 
 try:
@@ -18,37 +18,75 @@ except NameError:
 
 
 def start_gui(process):
+    """
+    A function that takes care of starting the GUI and stops the Scrapy crawler process when exited from program.
+
+    :param CrawlerProcess process: The scrapy crawler process that is used to scrape the web. The instance is used for stopping the process.
+    """
+
     def create_ui(screen):
-        GUI.screen = screen
-        GUI.strings = []
-        GUI.init_display()
-        GUI.update_on_key()
+        """
+        A function passes to curses wrapper for safe execution of terminal GUI.
+
+        :param screen: The screen parameter to run the GUI. Sent from the curses wrapper.
+        """
+
+        GUI.screen = screen  # All the statis variables of the GUI class is initialized
+        GUI.strings = []  # the list of songs is empty initially
+        GUI.init_display()  # init the variables required for GUI
+        GUI.update_on_key()  # Starts a loop that waits for key input and acts accordingly
+
         curses.nocbreak()
         curses.echo()
         curses.endwin()
         GUI.gui_stopped = True
 
     curses.wrapper(create_ui)
-    process.stop()
+    process.stop()  # Stopping the scrapy crawler process
 
 
 def main():
+    """
+    The entry point for the app. Called when music-scraper is typed in terminal.
+
+    """
+    curses.initscr()
+    if curses.COLS < 80 or curses.LINES < 5:
+        curses.endwin()
+        print('Terminal\'s dimensions are too small')
+        return
+
     process = CrawlerProcess({'LOG_ENABLED': False})
-    message = ''
-    while message == '':
-        message = input("Give me something to start with - (Example: kabali song download ) : ")
-    s = request.quote(message)
+
+    def gui_input(screen):
+        GUI.screen = screen
+        curses.start_color()
+        GUI.screen.keypad(1)
+        curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
+        GUI.high_light_text = curses.color_pair(1)
+        GUI.normal_text = curses.A_NORMAL
+        GUI.box = curses.newwin(curses.LINES, curses.COLS, 0, 0)
+        GUI.message = GUI.get_input()
+
+    curses.wrapper(gui_input)
+    s = request.quote(GUI.message)
+
     MusicSpider.start_urls = [
         "http://www.google.com/search?q=" + s,
     ]
     process.crawl(MusicSpider)
-    thread = GuiThread(process, start_gui)
+    thread = GUIThread(process, start_gui)
     thread.start()
     process.start()
-    if len(GUI.strings) == 0 and not GUI.gui_stopped:
-        GUI.box.erase()
-        GUI.box.addstr(0, 0, "No Results Found... Try with Some other keywords.", GUI.high_light_text)
-        GUI.box.addstr(curses.LINES - 1, 0, "ESC:Exit", GUI.high_light_text)
-        GUI.box.addstr(curses.LINES - 1, curses.COLS // 2, "ENTR:Download", GUI.high_light_text)
-        GUI.screen.refresh()
-        GUI.box.refresh()
+    if not GUI.gui_stopped:
+        if len(GUI.strings) == 0:
+            GUI.box.erase()
+            GUI.box.addstr(1, 1, "No Results Found... Try with Some other keywords.", GUI.high_light_text)
+            GUI.add_bottom_menus()
+            GUI.screen.refresh()
+            GUI.box.refresh()
+        else:
+            GUI.box.addstr(curses.LINES - 2, 1, "Completed Scraping !!", GUI.high_light_text)
+            GUI.add_bottom_menus()
+            GUI.screen.refresh()
+            GUI.box.refresh()
