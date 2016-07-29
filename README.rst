@@ -58,3 +58,8 @@ How to Use
 ----------
 
 Type 'music-scraper' in the terminal and type in a query which can give audio files in Google Search. For example 'kabali songs download'.
+
+How to Contribute
+-----------------
+
+Read the docs for API reference from `here <http://music-scraper.readthedocs.io>`_. If you could think of any improvements for the project feel free to make a PULL REQUEST.

@@ -3,7 +3,6 @@ API Reference
 
 .. automodule:: music_scraper.main
    :members:
-   :undoc-members:
 
 .. automodule:: music_scraper.gui
    :members:
@@ -13,4 +12,3 @@ API Reference
 
 .. automodule:: music_scraper.spiders.music_spider
    :members:
-   :undoc-members:

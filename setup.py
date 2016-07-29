@@ -31,7 +31,7 @@ with io.open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 
 setup(name='music_scraper',
-      version='1.0.0',
+      version='1.1.0',
       install_requires=['scrapy >= 1.1.1'],
       description='Gets Songs from the web and allows users to download the same',
       long_description=long_description,
