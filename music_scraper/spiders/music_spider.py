@@ -10,6 +10,7 @@ items = []
 def is_standard_website(href):
     """
     Function to remove urls belonging to some famous sites
+
     :param str href: the url
     :return bool: True or False
     """

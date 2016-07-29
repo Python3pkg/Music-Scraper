@@ -10,6 +10,28 @@ from music_scraper.threads import DownloadThread
 
 
 class GUI:
+    """
+    A static class containing attributes to control the GUI process of the app
+
+    Attributes:
+        :screen: The maximum speed that such a bird can attain.
+        :status: The locale where these birds congregate to reproduce.
+        :strings: The list of song names, scraped from the web
+        :size_dict: Dictionary mapping file names to size of file.
+        :url_dict: Dictionary mapping file names to url of file.
+        :pages: Total number of pages required to display the song list.
+        :page: current page number
+        :position: current highlighted song name.
+        :max_row: Maximum number of rows that can be displayed in the terminal window.
+        :row_num: Total number of rows required.
+        :box: Box object which is drawn on the screen with curses
+        :high_light_text: curses color of highlighted text.
+        :normal_text: Normal text color.
+        :key: current pressed key value.
+        :run_download: Used to indicate an ongoing download
+        :gui_stopped: Used to indicate whether GUI is on or off
+        :message: The message or query passed to scrapy and got as input from user
+    """
 
     screen = None
     status = 'Scraping Music ... It might take some time.'

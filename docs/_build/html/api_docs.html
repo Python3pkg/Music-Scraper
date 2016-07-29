@@ -1,0 +1,439 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API Reference &mdash; Music-Scraper 1.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Music-Scraper 1.1.0 documentation" href="index.html"/>
+        <link rel="prev" title="Welcome to Music-Scraper’s documentation!" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Music-Scraper
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">Music-Scraper</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/api_docs.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-music_scraper.main">
+<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-music_scraper.main" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="music_scraper.main.main">
+<code class="descclassname">music_scraper.main.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/main.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.main.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>The entry point for the app. Called when music-scraper is typed in terminal.
+Starts the GUI and starts the scraping process after the input is given</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="music_scraper.main.start_gui">
+<code class="descclassname">music_scraper.main.</code><code class="descname">start_gui</code><span class="sig-paren">(</span><em>process</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/main.html#start_gui"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.main.start_gui" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that takes care of starting the GUI and stops the Scrapy crawler process when exited from program.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>process</strong> (<em>CrawlerProcess</em>) &#8211; The scrapy crawler process that is used to scrape the web. The instance is used for stopping the process.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<span class="target" id="module-music_scraper.gui"></span><dl class="class">
+<dt id="music_scraper.gui.GUI">
+<em class="property">class </em><code class="descclassname">music_scraper.gui.</code><code class="descname">GUI</code><a class="reference internal" href="_modules/music_scraper/gui.html#GUI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI" title="Permalink to this definition">¶</a></dt>
+<dd><p>A static class containing attributes to control the GUI process of the app</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">screen:</th><td class="field-body">The maximum speed that such a bird can attain.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">status:</th><td class="field-body">The locale where these birds congregate to reproduce.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">strings:</th><td class="field-body">The list of song names, scraped from the web</td>
+</tr>
+<tr class="field-even field"><th class="field-name">size_dict:</th><td class="field-body">Dictionary mapping file names to size of file.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">url_dict:</th><td class="field-body">Dictionary mapping file names to url of file.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">pages:</th><td class="field-body">Total number of pages required to display the song list.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">page:</th><td class="field-body">current page number</td>
+</tr>
+<tr class="field-even field"><th class="field-name">position:</th><td class="field-body">current highlighted song name.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">max_row:</th><td class="field-body">Maximum number of rows that can be displayed in the terminal window.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">row_num:</th><td class="field-body">Total number of rows required.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">box:</th><td class="field-body">Box object which is drawn on the screen with curses</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">high_light_text:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">curses color of highlighted text.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">normal_text:</th><td class="field-body">Normal text color.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">key:</th><td class="field-body">current pressed key value.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">run_download:</th><td class="field-body">Used to indicate an ongoing download</td>
+</tr>
+<tr class="field-even field"><th class="field-name">gui_stopped:</th><td class="field-body">Used to indicate whether GUI is on or off</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">message:</th><td class="field-body">The message or query passed to scrapy and got as input from user</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.add_bottom_menus">
+<em class="property">static </em><code class="descname">add_bottom_menus</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.add_bottom_menus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.add_bottom_menus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds the bottom menu Exit and Download</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.display_list">
+<em class="property">static </em><code class="descname">display_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.display_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.display_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays the list of song names scraped from web.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.download_item">
+<em class="property">static </em><code class="descname">download_item</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.download_item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.download_item" title="Permalink to this definition">¶</a></dt>
+<dd><p>It downloads the song from the url and saves it in the file.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.get_input">
+<em class="property">static </em><code class="descname">get_input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.get_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.get_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loops till user types a non empty query
+:return: The user inputted query.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.init_display">
+<em class="property">static </em><code class="descname">init_display</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.init_display"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.init_display" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inits the display GUI</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.my_raw_input">
+<em class="property">static </em><code class="descname">my_raw_input</code><span class="sig-paren">(</span><em>r</em>, <em>c</em>, <em>prompt_string</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.my_raw_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.my_raw_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets input on the screen
+:param r: y coordinate
+:param c: x coordinate
+:param prompt_string: The prompt string
+:return: The input string</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.on_key_down">
+<em class="property">static </em><code class="descname">on_key_down</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.on_key_down"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.on_key_down" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when down arrow is pressed</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.on_key_enter">
+<em class="property">static </em><code class="descname">on_key_enter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.on_key_enter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.on_key_enter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when enter key is pressed. It starts the download process in a new thread</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.on_key_left">
+<em class="property">static </em><code class="descname">on_key_left</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.on_key_left"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.on_key_left" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when left arrow key is pressed.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.on_key_right">
+<em class="property">static </em><code class="descname">on_key_right</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.on_key_right"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.on_key_right" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when right arrow key is pressed.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.on_key_up">
+<em class="property">static </em><code class="descname">on_key_up</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.on_key_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.on_key_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when up arrow key is pressed.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.refresh_values">
+<em class="property">static </em><code class="descname">refresh_values</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.refresh_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.refresh_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refresh the parameters when the size of list changes in display</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.update_on_key">
+<em class="property">static </em><code class="descname">update_on_key</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.update_on_key"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.update_on_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loops to get a key input and updates the screen accordingly</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="music_scraper.gui.GUI.update_screen">
+<em class="property">static </em><code class="descname">update_screen</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/gui.html#GUI.update_screen"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.gui.GUI.update_screen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the screen each time a key is pressed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-music_scraper.threads"></span><dl class="class">
+<dt id="music_scraper.threads.DownloadThread">
+<em class="property">class </em><code class="descclassname">music_scraper.threads.</code><code class="descname">DownloadThread</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/threads.html#DownloadThread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.threads.DownloadThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>A thread used for downloading Audio files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>func</strong> &#8211; The function that is run in the thread.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="music_scraper.threads.GUIThread">
+<em class="property">class </em><code class="descclassname">music_scraper.threads.</code><code class="descname">GUIThread</code><span class="sig-paren">(</span><em>process</em>, <em>func</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/threads.html#GUIThread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.threads.GUIThread" title="Permalink to this definition">¶</a></dt>
+<dd><p>A thread used to run GUI in parallel</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>process</strong> (<em>CrawlerProcess</em>) &#8211; Process of Scrapy that scrapes the Web for songs</li>
+<li><strong>func</strong> &#8211; The function to run when the thread is started.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<span class="target" id="module-music_scraper.spiders.music_spider"></span><dl class="class">
+<dt id="music_scraper.spiders.music_spider.MusicSpider">
+<em class="property">class </em><code class="descclassname">music_scraper.spiders.music_spider.</code><code class="descname">MusicSpider</code><span class="sig-paren">(</span><em>name=None</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/spiders/music_spider.html#MusicSpider"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.spiders.music_spider.MusicSpider" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="music_scraper.spiders.music_spider.MusicSpider.name">
+<code class="descname">name</code><em class="property"> = 'music'</em><a class="headerlink" href="#music_scraper.spiders.music_spider.MusicSpider.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="music_scraper.spiders.music_spider.MusicSpider.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/spiders/music_spider.html#MusicSpider.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.spiders.music_spider.MusicSpider.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Override function of the class scrapy.Spider. Called when response is obtained
+:param response: Response object used to get the details of the webpage</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="music_scraper.spiders.music_spider.MusicSpider.parse_header">
+<code class="descname">parse_header</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/spiders/music_spider.html#MusicSpider.parse_header"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.spiders.music_spider.MusicSpider.parse_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function called when header of each link in each result is obtained
+:param response: Response object used to get the details of the webpage</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="music_scraper.spiders.music_spider.MusicSpider.parse_result_contents">
+<code class="descname">parse_result_contents</code><span class="sig-paren">(</span><em>response</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/spiders/music_spider.html#MusicSpider.parse_result_contents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.spiders.music_spider.MusicSpider.parse_result_contents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Callback function called when the webpage of each result is opened.
+:param response: Response object used to get the details of the webpage</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="music_scraper.spiders.music_spider.is_standard_website">
+<code class="descclassname">music_scraper.spiders.music_spider.</code><code class="descname">is_standard_website</code><span class="sig-paren">(</span><em>href</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/music_scraper/spiders/music_spider.html#is_standard_website"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#music_scraper.spiders.music_spider.is_standard_website" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to remove urls belonging to some famous sites</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>href</strong> (<em>str</em>) &#8211; the url</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return bool:</th><td class="field-body">True or False</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to Music-Scraper’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, srivatsan-ramesh.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,469 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>music_scraper.gui &mdash; Music-Scraper 1.1.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="Music-Scraper 1.1.0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Music-Scraper
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api_docs.html">API Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">Music-Scraper</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+    <li>music_scraper.gui</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for music_scraper.gui</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">curses</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">request</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">urllib2</span> <span class="kn">as</span> <span class="nn">request</span>
+
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
+
+<span class="kn">from</span> <span class="nn">music_scraper.threads</span> <span class="kn">import</span> <span class="n">DownloadThread</span>
+
+
+<div class="viewcode-block" id="GUI"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI">[docs]</a><span class="k">class</span> <span class="nc">GUI</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A static class containing attributes to control the GUI process of the app</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        :screen: The maximum speed that such a bird can attain.</span>
+<span class="sd">        :status: The locale where these birds congregate to reproduce.</span>
+<span class="sd">        :strings: The list of song names, scraped from the web</span>
+<span class="sd">        :size_dict: Dictionary mapping file names to size of file.</span>
+<span class="sd">        :url_dict: Dictionary mapping file names to url of file.</span>
+<span class="sd">        :pages: Total number of pages required to display the song list.</span>
+<span class="sd">        :page: current page number</span>
+<span class="sd">        :position: current highlighted song name.</span>
+<span class="sd">        :max_row: Maximum number of rows that can be displayed in the terminal window.</span>
+<span class="sd">        :row_num: Total number of rows required.</span>
+<span class="sd">        :box: Box object which is drawn on the screen with curses</span>
+<span class="sd">        :high_light_text: curses color of highlighted text.</span>
+<span class="sd">        :normal_text: Normal text color.</span>
+<span class="sd">        :key: current pressed key value.</span>
+<span class="sd">        :run_download: Used to indicate an ongoing download</span>
+<span class="sd">        :gui_stopped: Used to indicate whether GUI is on or off</span>
+<span class="sd">        :message: The message or query passed to scrapy and got as input from user</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">screen</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;Scraping Music ... It might take some time.&#39;</span>
+
+    <span class="c1"># Song links&#39; info</span>
+    <span class="n">strings</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">size_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">url_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># Info used to diaplay list</span>
+    <span class="n">pages</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">page</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">max_row</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">row_num</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">box</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">high_light_text</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">normal_text</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">run_download</span> <span class="o">=</span> <span class="bp">False</span>    <span class="c1"># Used to indicate an ongoing download</span>
+    <span class="n">gui_stopped</span> <span class="o">=</span> <span class="bp">False</span>     <span class="c1"># Used to indicate whether GUI is on or off</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>            <span class="c1"># The message or query passed to scrapy and got as input from user</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.init_display"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.init_display">[docs]</a>    <span class="k">def</span> <span class="nf">init_display</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inits the display GUI</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">GUI</span><span class="o">.</span><span class="n">gui_stopped</span><span class="p">:</span>
+            <span class="n">curses</span><span class="o">.</span><span class="n">noecho</span><span class="p">()</span>
+            <span class="n">curses</span><span class="o">.</span><span class="n">cbreak</span><span class="p">()</span>
+            <span class="n">curses</span><span class="o">.</span><span class="n">start_color</span><span class="p">()</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">keypad</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">curses</span><span class="o">.</span><span class="n">init_pair</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">curses</span><span class="o">.</span><span class="n">COLOR_BLACK</span><span class="p">,</span> <span class="n">curses</span><span class="o">.</span><span class="n">COLOR_CYAN</span><span class="p">)</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">high_light_text</span> <span class="o">=</span> <span class="n">curses</span><span class="o">.</span><span class="n">color_pair</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">normal_text</span> <span class="o">=</span> <span class="n">curses</span><span class="o">.</span><span class="n">A_NORMAL</span>
+            <span class="n">curses</span><span class="o">.</span><span class="n">curs_set</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">refresh_values</span><span class="p">()</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">box</span> <span class="o">=</span> <span class="n">curses</span><span class="o">.</span><span class="n">newwin</span><span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="n">curses</span><span class="o">.</span><span class="n">COLS</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">addstr</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GUI</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">GUI</span><span class="o">.</span><span class="n">high_light_text</span><span class="p">)</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">add_bottom_menus</span><span class="p">()</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.refresh_values"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.refresh_values">[docs]</a>    <span class="k">def</span> <span class="nf">refresh_values</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Refresh the parameters when the size of list changes in display</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">GUI</span><span class="o">.</span><span class="n">gui_stopped</span><span class="p">:</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">=</span> <span class="n">curses</span><span class="o">.</span><span class="n">LINES</span> <span class="o">-</span> <span class="mi">3</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">row_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">strings</span><span class="p">)</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">pages</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">row_num</span> <span class="o">/</span> <span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span><span class="p">))</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.add_bottom_menus"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.add_bottom_menus">[docs]</a>    <span class="k">def</span> <span class="nf">add_bottom_menus</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds the bottom menu Exit and Download</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">addstr</span><span class="p">(</span><span class="n">curses</span><span class="o">.</span><span class="n">LINES</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;ESC:Exit&quot;</span><span class="p">,</span> <span class="n">GUI</span><span class="o">.</span><span class="n">high_light_text</span><span class="p">)</span>
+        <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">addstr</span><span class="p">(</span><span class="n">curses</span><span class="o">.</span><span class="n">LINES</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">curses</span><span class="o">.</span><span class="n">COLS</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;ENTR:Download&quot;</span><span class="p">,</span> <span class="n">GUI</span><span class="o">.</span><span class="n">high_light_text</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.on_key_down"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.on_key_down">[docs]</a>    <span class="k">def</span> <span class="nf">on_key_down</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when down arrow is pressed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">GUI</span><span class="o">.</span><span class="n">row_num</span><span class="p">):</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">pages</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">==</span> <span class="n">GUI</span><span class="o">.</span><span class="n">pages</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">&lt;</span> <span class="n">GUI</span><span class="o">.</span><span class="n">row_num</span><span class="p">:</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">&lt;</span> <span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">+</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)):</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.on_key_up"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.on_key_up">[docs]</a>    <span class="k">def</span> <span class="nf">on_key_up</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when up arrow key is pressed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))):</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">+</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.on_key_left"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.on_key_left">[docs]</a>    <span class="k">def</span> <span class="nf">on_key_left</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when left arrow key is pressed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.on_key_right"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.on_key_right">[docs]</a>    <span class="k">def</span> <span class="nf">on_key_right</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when right arrow key is pressed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">&lt;</span> <span class="n">GUI</span><span class="o">.</span><span class="n">pages</span><span class="p">:</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)))</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.on_key_enter"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.on_key_enter">[docs]</a>    <span class="k">def</span> <span class="nf">on_key_enter</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when enter key is pressed. It starts the download process in a new thread</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">thread</span> <span class="o">=</span> <span class="n">DownloadThread</span><span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">download_item</span><span class="p">)</span>
+        <span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.display_list"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.display_list">[docs]</a>    <span class="k">def</span> <span class="nf">display_list</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Displays the list of song names scraped from web.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))):</span>
+            <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">row_num</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">addstr</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">GUI</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">GUI</span><span class="o">.</span><span class="n">high_light_text</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">+</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)):</span>
+                    <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">addstr</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; - &quot;</span> <span class="o">+</span> <span class="n">GUI</span><span class="o">.</span><span class="n">strings</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                                   <span class="s2">&quot; : </span><span class="si">%.2f</span><span class="s2">MB&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">size_dict</span><span class="p">[</span><span class="n">GUI</span><span class="o">.</span><span class="n">strings</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span><span class="o">/</span><span class="mi">1024</span><span class="o">/</span><span class="mi">1024</span><span class="p">),</span> <span class="n">GUI</span><span class="o">.</span><span class="n">high_light_text</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">addstr</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">max_row</span> <span class="o">*</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">page</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; - &quot;</span> <span class="o">+</span> <span class="n">GUI</span><span class="o">.</span><span class="n">strings</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                                   <span class="s2">&quot; : </span><span class="si">%.2f</span><span class="s2">MB&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">size_dict</span><span class="p">[</span><span class="n">GUI</span><span class="o">.</span><span class="n">strings</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]]</span><span class="o">/</span><span class="mi">1024</span><span class="o">/</span><span class="mi">1024</span><span class="p">),</span> <span class="n">GUI</span><span class="o">.</span><span class="n">normal_text</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">GUI</span><span class="o">.</span><span class="n">row_num</span><span class="p">:</span>
+                    <span class="k">break</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.update_screen"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.update_screen">[docs]</a>    <span class="k">def</span> <span class="nf">update_screen</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the screen each time a key is pressed.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">GUI</span><span class="o">.</span><span class="n">gui_stopped</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">curses</span><span class="o">.</span><span class="n">KEY_DOWN</span><span class="p">:</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">on_key_down</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">GUI</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">curses</span><span class="o">.</span><span class="n">KEY_UP</span><span class="p">:</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">on_key_up</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">GUI</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">curses</span><span class="o">.</span><span class="n">KEY_LEFT</span><span class="p">:</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">on_key_left</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">GUI</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="n">curses</span><span class="o">.</span><span class="n">KEY_RIGHT</span><span class="p">:</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">on_key_right</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">GUI</span><span class="o">.</span><span class="n">row_num</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">on_key_enter</span><span class="p">()</span>
+
+            <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">erase</span><span class="p">()</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">display_list</span><span class="p">()</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">add_bottom_menus</span><span class="p">()</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.update_on_key"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.update_on_key">[docs]</a>    <span class="k">def</span> <span class="nf">update_on_key</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loops to get a key input and updates the screen accordingly</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">GUI</span><span class="o">.</span><span class="n">gui_stopped</span><span class="p">:</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">GUI</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">getch</span><span class="p">()</span>
+            <span class="k">while</span> <span class="n">GUI</span><span class="o">.</span><span class="n">key</span> <span class="o">!=</span> <span class="mi">27</span> <span class="ow">or</span> <span class="n">GUI</span><span class="o">.</span><span class="n">run_download</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">GUI</span><span class="o">.</span><span class="n">key</span> <span class="ow">or</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">GUI</span><span class="o">.</span><span class="n">key</span><span class="p">:</span>
+                    <span class="n">GUI</span><span class="o">.</span><span class="n">run_download</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">update_screen</span><span class="p">()</span>
+                <span class="n">GUI</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">GUI</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">getch</span><span class="p">()</span>
+            <span class="n">curses</span><span class="o">.</span><span class="n">endwin</span><span class="p">()</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.download_item"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.download_item">[docs]</a>    <span class="k">def</span> <span class="nf">download_item</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        It downloads the song from the url and saves it in the file.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">GUI</span><span class="o">.</span><span class="n">run_download</span> <span class="ow">or</span> <span class="n">GUI</span><span class="o">.</span><span class="n">gui_stopped</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">GUI</span><span class="o">.</span><span class="n">run_download</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">GUI</span><span class="o">.</span><span class="n">strings</span><span class="p">[</span><span class="n">GUI</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">GUI</span><span class="o">.</span><span class="n">url_dict</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span>
+        <span class="c1"># User agent is specified to prevent some websites from blocking the software</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0&#39;</span><span class="p">})</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">req</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+
+        <span class="n">file_size_dl</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">block_sz</span> <span class="o">=</span> <span class="mi">8192</span>
+        <span class="k">while</span> <span class="n">GUI</span><span class="o">.</span><span class="n">run_download</span><span class="p">:</span>
+            <span class="nb">buffer</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">block_sz</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">buffer</span><span class="p">:</span>
+                <span class="k">break</span>
+            <span class="n">file_size_dl</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">buffer</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">buffer</span><span class="p">)</span>
+            <span class="c1"># The percentage downloaded</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;Downloading &quot;</span> <span class="o">+</span> <span class="n">filename</span> <span class="o">+</span> <span class="s2">&quot; [</span><span class="si">%3.2f%%</span><span class="s2">]&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">file_size_dl</span> <span class="o">*</span> <span class="mf">100.</span> <span class="o">/</span> <span class="n">GUI</span><span class="o">.</span><span class="n">size_dict</span><span class="p">[</span><span class="n">filename</span><span class="p">])</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">erase</span><span class="p">()</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">addstr</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">status</span><span class="p">,</span> <span class="n">GUI</span><span class="o">.</span><span class="n">high_light_text</span><span class="p">)</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">addstr</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Size: </span><span class="si">%.2f</span><span class="s1">MB&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">GUI</span><span class="o">.</span><span class="n">size_dict</span><span class="p">[</span><span class="n">filename</span><span class="p">]</span><span class="o">/</span><span class="mi">1024</span><span class="o">/</span><span class="mi">1024</span><span class="p">))</span>
+            <span class="c1"># Cancel button to cancel the download</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">addstr</span><span class="p">(</span><span class="n">curses</span><span class="o">.</span><span class="n">LINES</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;C:Cancel Download&quot;</span><span class="p">,</span> <span class="n">GUI</span><span class="o">.</span><span class="n">high_light_text</span><span class="p">)</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">screen</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+            <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">GUI</span><span class="o">.</span><span class="n">run_download</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="n">GUI</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">curses</span><span class="o">.</span><span class="n">KEY_DOWN</span>
+        <span class="n">GUI</span><span class="o">.</span><span class="n">update_screen</span><span class="p">()</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.my_raw_input"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.my_raw_input">[docs]</a>    <span class="k">def</span> <span class="nf">my_raw_input</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">prompt_string</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets input on the screen</span>
+<span class="sd">        :param r: y coordinate</span>
+<span class="sd">        :param c: x coordinate</span>
+<span class="sd">        :param prompt_string: The prompt string</span>
+<span class="sd">        :return: The input string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">curses</span><span class="o">.</span><span class="n">echo</span><span class="p">()</span>
+        <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">addstr</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">prompt_string</span><span class="p">,</span> <span class="n">GUI</span><span class="o">.</span><span class="n">high_light_text</span><span class="p">)</span>
+        <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">refresh</span><span class="p">()</span>
+        <span class="n">input_str</span> <span class="o">=</span> <span class="n">GUI</span><span class="o">.</span><span class="n">box</span><span class="o">.</span><span class="n">getstr</span><span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">curses</span><span class="o">.</span><span class="n">COLS</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">input_str</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">)</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="GUI.get_input"><a class="viewcode-back" href="../../api_docs.html#music_scraper.gui.GUI.get_input">[docs]</a>    <span class="k">def</span> <span class="nf">get_input</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Loops till user types a non empty query</span>
+<span class="sd">        :return: The user inputted query.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">input_str</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">while</span> <span class="n">input_str</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">input_str</span> <span class="o">=</span> <span class="n">GUI</span><span class="o">.</span><span class="n">my_raw_input</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Give me something to start with - (Example: kabali song download):&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">input_str</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2016, srivatsan-ramesh.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.1.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
